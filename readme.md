@@ -2,7 +2,7 @@ Address Book
 ============================
 > Simple RESTful API to create, read, update and delete contacts.
 
-### Top-level Directory Layout
+## Top-level Directory Layout
 
     .
     ├── routes                  # Routes folder
@@ -15,21 +15,21 @@ Address Book
 
 ### Get All Contacts
 ``` bash
-GET contact/
+GET /contact
 ```
 ### Get Single Contact
 ``` bash
-GET contact/{name}
+GET /contact/{name}
 ```
 
 ### Delete Contact
 ``` bash
-DELETE contact/{name}
+DELETE /contact/{name}
 ```
 
 ### Create Contact
 ``` bash
-POST contact/
+POST /contact/
 
 # Request sample
 # {
@@ -42,7 +42,7 @@ POST contact/
 
 ### Update Contact
 ``` bash
-PUT contact/{name}
+PUT /contact/{name}
 
 # Request sample
 # {

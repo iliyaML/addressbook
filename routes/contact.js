@@ -1,6 +1,7 @@
 const express = require('express');
 const elasticsearch = require('elasticsearch');
 const url = require('url');
+const router = express.Router();
 
 const indexName = 'contact';
 const typeName = 'document';
@@ -13,7 +14,7 @@ const client = new elasticsearch.Client({
 client.indices.exists({
     index: indexName
 })
-    .then((exists) => {
+    .then(exists => {
         if (exists) {
             return client.indices.delete({
                 index: indexName
@@ -32,14 +33,46 @@ client.indices.exists({
             body: {
                 properties: {
                     email: { type: 'text' },
-                    phone: { type: 'integer' },
+                    phone: { type: 'long' },
                     address: { type: 'text' }
                 }
             }
         });
+    })
+    .then(() => {
+        var promises = [
+            {
+                name: 'Michael',
+                email: 'michael@gmail.com',
+                phone: 6156002946,
+                address: 'Nashville, TN'
+            },
+            {
+                name: 'David',
+                email: 'david@gmail.com',
+                phone: 9984876300,
+                address: 'Nashville, TN'
+            },
+            {
+                name: 'Chris',
+                email: 'chris@gmail.com',
+                phone: 1234343091,
+                address: 'Nashville, TN'
+            }
+        ].map(user => {
+            return client.index({
+                index: indexName,
+                type: typeName,
+                id: user.name,
+                body: {
+                    email: user.email,
+                    phone: user.phone,
+                    address: user.address
+                }
+            });
+        });
+        return Promise.all(promises);
     });
-
-const router = express.Router();
 
 // @route   GET /contact
 // @desc    Get contact information
@@ -105,7 +138,7 @@ router.post('/', (req, res) => {
                     // Create user if no error
                     res.status(200).json({
                         status: 200,
-                        response: `The user ${name} was successfully created`,
+                        response: 'User successfully created!',
                         success: true,
                         result: resp.result
                     });
@@ -200,7 +233,7 @@ router.delete('/:name', (req, res) => {
         if (err) {
             res.status(err.statusCode).json({
                 status: err.statusCode, // 404
-                response: `There is no user with the name ${name}`,
+                response: 'User does not exist',
                 success: false
             });
         } else {

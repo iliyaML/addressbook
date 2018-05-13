@@ -74,7 +74,7 @@ describe('Address Book', () => {
                     res.body.should.have.property('result');
 
                     chai.request(server)
-                        .get('/contact/Iliya')
+                        .get(`/contact/${newUser.name}`)
                         .end((err, res) => {
                             res.should.have.status(200);
                             res.body.response.should.be.a('object');
@@ -103,7 +103,7 @@ describe('Address Book', () => {
     describe('GET /contact/:name', () => {
         it('it should get a user given the name', done => {
             chai.request(server)
-                .get('/contact/Iliya')
+                .get(`/contact/${newUser.name}`)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.response.should.be.a('object');
@@ -135,7 +135,7 @@ describe('Address Book', () => {
 
         it('it should update a user given the name', done => {
             chai.request(server)
-                .put('/contact/Iliya')
+                .put(`/contact/${newUser.name}`)
                 .send(newProperties)
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -146,7 +146,7 @@ describe('Address Book', () => {
                     // Follow up request
                     // Using GET to check if the fields were updated
                     chai.request(server)
-                        .get('/contact/Iliya')
+                        .get(`/contact/${newUser.name}`)
                         .end((err, res) => {
                             res.should.have.status(200);
                             res.body.response.should.be.a('object');
@@ -174,7 +174,7 @@ describe('Address Book', () => {
     describe('DELETE /contact/:name', () => {
         it('it should delete a user given the name', done => {
             chai.request(server)
-                .delete('/contact/Iliya')
+                .delete(`/contact/${newUser.name}`)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.have.property('response').eql('User successfully deleted!');
@@ -183,7 +183,7 @@ describe('Address Book', () => {
                     // Follow up request
                     // Using GET to check if user Iliya still exists
                     chai.request(server)
-                        .get('/contact/Iliya')
+                        .get(`/contact/${newUser.name}`)
                         .end((err, res) => {
                             res.should.have.status(404);
                             res.body.should.have.property('response').eql('User does not exist');
@@ -195,10 +195,10 @@ describe('Address Book', () => {
 
         it('it should give an error as the user no longer exists', done => {
             chai.request(server)
-                .delete('/contact/Iliya')
+                .delete(`/contact/${newUser.name}`)
                 .end((err, res) => {
                     res.should.have.status(404);
-                    res.body.should.have.property('response').eql('There is no user with the name Iliya');
+                    res.body.should.have.property('response').eql('User does not exist');
                     res.body.should.have.property('success').eql(false);
                     done();
                 });
