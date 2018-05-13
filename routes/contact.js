@@ -3,14 +3,29 @@ const elasticsearch = require('elasticsearch');
 const url = require('url');
 const router = express.Router();
 
+// Intialize index and type names
 const indexName = 'contact';
 const typeName = 'document';
 
+// Initialize ES client
 // Establish client
 const client = new elasticsearch.Client({
-    host: 'localhost:9200'
+    host: process.env.ES_HOST
 });
 
+client.ping({
+    requestTimeout: 30000,
+}, function (error) {
+    if (error) {
+        console.error('elasticsearch cluster is down!');
+    } else {
+        console.log('All is well');
+    }
+});
+
+// Check to see if index exists
+// If it does, delete index and create new index
+// And initialize some dummy values
 client.indices.exists({
     index: indexName
 })

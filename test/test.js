@@ -4,17 +4,17 @@ const elasticsearch = require('elasticsearch');
 const server = require('../server');
 const should = chai.should();
 
-// Establish client
-const client = new elasticsearch.Client({
-    host: 'localhost:9200'
-});
-
 // chai-http Middleware
 chai.use(chaiHttp);
 
 // Initialize the index and type names
 const indexName = 'testcontact';
 const typeName = 'document';
+
+// Establish client
+const client = new elasticsearch.Client({
+    host: process.env.ES_HOST
+});
 
 // Profile for dummy
 const newUser = {
@@ -31,7 +31,7 @@ describe('Address Book', () => {
         client.indices.exists({
             index: indexName
         })
-            .then((exists) => {
+            .then(exists => {
                 if (exists) {
                     return client.indices.delete({
                         index: indexName

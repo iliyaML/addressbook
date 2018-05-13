@@ -1,6 +1,7 @@
 const express = require('express');
-const elasticsearch = require('elasticsearch');
 const bodyParser = require('body-parser');
+
+require('dotenv').config();
 
 // Initialize app
 const app = express();
