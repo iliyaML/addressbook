@@ -1,22 +1,22 @@
-const assert = require('assert');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const elasticsearch = require('elasticsearch');
+const server = require('../server');
+const should = chai.should();
 
 // Establish client
 const client = new elasticsearch.Client({
     host: 'localhost:9200'
 });
 
-const server = require('../server');
-
-const should = chai.should();
-
+// chai-http Middleware
 chai.use(chaiHttp);
 
-const indexName = 'mycontactz';
+// Initialize the index and type names
+const indexName = 'testcontact';
 const typeName = 'document';
 
+// Profile for dummy
 const newUser = {
     name: 'Iliya',
     email: 'iliyamlokman@gmail.com',
@@ -25,8 +25,8 @@ const newUser = {
 };
 
 describe('Address Book', () => {
-    beforeEach((done) => {
-        // Before each test
+    before(done => {
+        // Before any test is executed
         // Create a fresh and clean index
         client.indices.exists({
             index: indexName
@@ -45,8 +45,8 @@ describe('Address Book', () => {
             });
     });
 
-    describe('/GET', () => {
-        it('it should get all the names in the contact list', done => {
+    describe('GET /contact', () => {
+        it('it should get an empty contact list', done => {
             chai.request(server)
                 .get('/contact')
                 .end((err, res) => {
@@ -61,7 +61,7 @@ describe('Address Book', () => {
         });
     });
 
-    describe('/POST', () => {
+    describe('POST /contact', () => {
         it('it should add a user with name', done => {
             chai.request(server)
                 .post('/contact')
@@ -72,21 +72,56 @@ describe('Address Book', () => {
                     res.body.should.have.property('success');
                     res.body.should.have.property('success').eql(true);
                     res.body.should.have.property('result');
+
+                    chai.request(server)
+                        .get('/contact/Iliya')
+                        .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.response.should.be.a('object');
+                            res.body.response.should.have.property('phone').eql(newUser.phone);
+                            res.body.response.should.have.property('email').eql(newUser.email);
+                            res.body.response.should.have.property('address').eql(newUser.address);
+                            res.body.should.have.property('success').eql(true);
+                            done();
+                        });
+                });
+        });
+
+        it('it should not add a user if the name is already taken', done => {
+            chai.request(server)
+                .post('/contact')
+                .send(newUser)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('response').eql('Username is already taken');
+                    res.body.should.have.property('success').eql(false);
                     done();
                 });
         });
     });
 
     describe('GET /contact/:name', () => {
-        it('it should update a user given the name', done => {
+        it('it should get a user given the name', done => {
             chai.request(server)
                 .get('/contact/Iliya')
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.response.should.be.a('object');
-                    res.body.response.should.have.property('phone').eql(newProperties.phone);
-                    res.body.response.should.have.property('address').eql(newProperties.address);
+                    res.body.response.should.have.property('phone').eql(newUser.phone);
+                    res.body.response.should.have.property('email').eql(newUser.email);
+                    res.body.response.should.have.property('address').eql(newUser.address);
                     res.body.should.have.property('success').eql(true);
+                    done();
+                });
+        });
+
+        it('it should give an error if the user does not exist', done => {
+            chai.request(server)
+                .get('/contact/Jonathan')
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    res.body.should.have.property('response').eql('User does not exist');
+                    res.body.should.have.property('success').eql(false);
                     done();
                 });
         });

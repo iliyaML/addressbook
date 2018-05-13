@@ -2,7 +2,7 @@ const express = require('express');
 const elasticsearch = require('elasticsearch');
 const url = require('url');
 
-const indexName = 'mycontacts';
+const indexName = 'contact';
 const typeName = 'document';
 
 // Establish client
@@ -115,7 +115,7 @@ router.post('/', (req, res) => {
             // If name is already taken
             res.status(200).json({
                 status: 200,
-                response: `There is already a user by the name ${name}`,
+                response: 'Username is already taken',
                 success: false
             });
         }
