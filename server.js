@@ -1,13 +1,11 @@
-const express = require('express');
+const app = require('express')();
 const bodyParser = require('body-parser');
 
+// Set environment variables (.env)
 require('dotenv').config();
 
-// Initialize app
-const app = express();
-
 // PORT number
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.HTTP_PORT || 5000;
 
 // Body Parser Middleware
 app.use(bodyParser.urlencoded({ extended: false }));

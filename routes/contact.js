@@ -2,6 +2,7 @@ const express = require('express');
 const elasticsearch = require('elasticsearch');
 const url = require('url');
 const router = express.Router();
+const validateBodyInput = require('../validation/validateBodyInput');
 
 // Intialize index and type names
 const indexName = 'contact';
@@ -11,16 +12,6 @@ const typeName = 'document';
 // Establish client
 const client = new elasticsearch.Client({
     host: process.env.ES_HOST
-});
-
-client.ping({
-    requestTimeout: 30000,
-}, function (error) {
-    if (error) {
-        console.error('elasticsearch cluster is down!');
-    } else {
-        console.log('All is well');
-    }
 });
 
 // Check to see if index exists
@@ -47,6 +38,7 @@ client.indices.exists({
             type: typeName,
             body: {
                 properties: {
+                    fullname: { type: 'text' },
                     email: { type: 'text' },
                     phone: { type: 'long' },
                     address: { type: 'text' }
@@ -55,21 +47,24 @@ client.indices.exists({
         });
     })
     .then(() => {
-        var promises = [
+        const promises = [
             {
                 name: 'Michael',
+                fullname: 'Michael Jordan',
                 email: 'michael@gmail.com',
                 phone: 6156002946,
                 address: 'Nashville, TN'
             },
             {
                 name: 'David',
+                fullname: 'David Johnson',
                 email: 'david@gmail.com',
                 phone: 9984876300,
                 address: 'Nashville, TN'
             },
             {
                 name: 'Chris',
+                fullname: 'Chris Pratt',
                 email: 'chris@gmail.com',
                 phone: 1234343091,
                 address: 'Nashville, TN'
@@ -80,6 +75,7 @@ client.indices.exists({
                 type: typeName,
                 id: user.name,
                 body: {
+                    fullname: user.fullname,
                     email: user.email,
                     phone: user.phone,
                     address: user.address
@@ -122,7 +118,16 @@ router.get('/', (req, res) => {
 // @desc    Post contact
 // @access  Public
 router.post('/', (req, res) => {
-    const { name, email, phone, address } = req.body;
+    const { errors, isValid } = validateBodyInput(req.body);
+
+    // Verify inputs
+    if (!isValid) {
+        return res.status(400).json({
+            errors
+        });
+    }
+
+    const { name, fullname, email, phone, address } = req.body;
 
     // Search for the user by id/name
     client.get({
@@ -138,6 +143,7 @@ router.post('/', (req, res) => {
                 type: typeName,
                 id: name,
                 body: {
+                    fullname,
                     email,
                     phone,
                     address
@@ -201,8 +207,19 @@ router.get('/:name', (req, res) => {
 // @desc    Update contact information for a specific user
 // @access  Public
 router.put('/:name', (req, res) => {
+    const { errors, isValid } = validateBodyInput(req.body);
+
+    // Verify inputs
+    if (!isValid) {
+        return res.status(400).json({
+            errors
+        });
+    }
+
     const { name } = req.params;
-    const { email, phone, address } = req.body;
+    const { fullname, email, phone, address } = req.body;
+
+    console.log(fullname);
 
     client.update({
         index: indexName,
@@ -210,6 +227,7 @@ router.put('/:name', (req, res) => {
         id: name,
         body: {
             doc: {
+                fullname,
                 email,
                 phone,
                 address

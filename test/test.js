@@ -16,9 +16,10 @@ const client = new elasticsearch.Client({
     host: process.env.ES_HOST
 });
 
-// Profile for dummy
+// Profile for dummy user
 const newUser = {
     name: 'Iliya',
+    fullname: 'Iliya Mohamad Lokman',
     email: 'iliyamlokman@gmail.com',
     phone: '999',
     address: 'Nashville, TN'
@@ -78,6 +79,7 @@ describe('Address Book', () => {
                         .end((err, res) => {
                             res.should.have.status(200);
                             res.body.response.should.be.a('object');
+                            res.body.response.should.have.property('fullname').eql(newUser.fullname);
                             res.body.response.should.have.property('phone').eql(newUser.phone);
                             res.body.response.should.have.property('email').eql(newUser.email);
                             res.body.response.should.have.property('address').eql(newUser.address);
@@ -107,6 +109,7 @@ describe('Address Book', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.response.should.be.a('object');
+                    res.body.response.should.have.property('fullname').eql(newUser.fullname);
                     res.body.response.should.have.property('phone').eql(newUser.phone);
                     res.body.response.should.have.property('email').eql(newUser.email);
                     res.body.response.should.have.property('address').eql(newUser.address);
@@ -150,6 +153,7 @@ describe('Address Book', () => {
                         .end((err, res) => {
                             res.should.have.status(200);
                             res.body.response.should.be.a('object');
+                            res.body.response.should.have.property('fullname').eql(newUser.fullname);
                             res.body.response.should.have.property('phone').eql(newProperties.phone);
                             res.body.response.should.have.property('address').eql(newProperties.address);
                             res.body.should.have.property('success').eql(true);

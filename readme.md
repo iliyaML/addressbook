@@ -7,7 +7,9 @@ Address Book
     .
     ├── routes                  # Routes folder
     ├── test                    # Test folder
+    ├── validation              # Input validation folder
     ├── server.js               # Main source file
+    ├── .env                    # Environment variables              
     ├── .gitignore
     └── readme.md
 
