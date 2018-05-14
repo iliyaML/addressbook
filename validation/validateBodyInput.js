@@ -6,25 +6,26 @@ const isEmpty = value =>
 
 module.exports = validateBodyInput = data => {
     const errors = {};
+    const tmpData = {}
 
-    data.fullname = !isEmpty(data.fullname) ? data.fullname : '';
-    data.email = !isEmpty(data.email) ? data.email : '';
-    data.phone = !isEmpty(data.phone) ? data.phone : '';
-    data.address = !isEmpty(data.address) ? data.address : '';
+    tmpData.fullname = !isEmpty(data.fullname) ? data.fullname : '';
+    tmpData.email = !isEmpty(data.email) ? data.email : '';
+    tmpData.phone = !isEmpty(data.phone) ? data.phone : '';
+    tmpData.address = !isEmpty(data.address) ? data.address : '';
 
-    if(data.fullname.length > 150){
+    if(tmpData.fullname.length > 150){
         errors.fullname = 'Full name field is invalid';
     }
 
-    if(data.email.length > 150){
+    if(tmpData.email.length > 150){
         errors.email = 'Email field is invalid';
     }
 
-    if(data.phone.length > 15){
+    if(tmpData.phone.length > 15){
         errors.phone = 'Phone number field is invalid';
     }
 
-    if(data.address.length > 150){
+    if(tmpData.address.length > 150){
         errors.address = 'Address field is invalid';
     }
 
