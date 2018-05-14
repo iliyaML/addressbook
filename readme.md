@@ -13,12 +13,12 @@ Address Book
     ├── .gitignore
     └── readme.md
 
-## Running the app locally
-- Ensure you have [nodejs] installed
+## Running the App Locally
+- Ensure you have [nodejs], [java] and [elasticsearch] installed
 - Get the source by running `git clone https://github.com/iliyaML/addressbook.git` then `cd addressbook`
 - Run `npm install` to do first time installation of all dependencies
 - Run `npm run dev` to start the dev server
-- Open `http://localhost:5000` in your Postman to try it out
+- Open `http://localhost:5000` in [Postman] to try it out
 
 ## Endpoints
 
@@ -64,3 +64,6 @@ PUT /contact/{name}
 ```
 
 [nodejs]: https://nodejs.org/en/
+[java]: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+[elasticsearch]: https://www.elastic.co/downloads/elasticsearch
+[Postman]: https://www.getpostman.com/
