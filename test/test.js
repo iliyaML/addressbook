@@ -153,7 +153,6 @@ describe('Address Book', () => {
                         .end((err, res) => {
                             res.should.have.status(200);
                             res.body.response.should.be.a('object');
-                            res.body.response.should.have.property('fullname').eql(newUser.fullname);
                             res.body.response.should.have.property('phone').eql(newProperties.phone);
                             res.body.response.should.have.property('address').eql(newProperties.address);
                             res.body.should.have.property('success').eql(true);

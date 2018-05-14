@@ -219,8 +219,6 @@ router.put('/:name', (req, res) => {
     const { name } = req.params;
     const { fullname, email, phone, address } = req.body;
 
-    console.log(fullname);
-
     client.update({
         index: indexName,
         type: typeName,
