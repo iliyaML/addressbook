@@ -13,6 +13,13 @@ Address Book
     ├── .gitignore
     └── readme.md
 
+## Running the app locally
+- Ensure you have [nodejs] installed
+- Get the source by running `git clone https://github.com/iliyaML/addressbook.git` then `cd addressbook`
+- Run `npm install` to do first time installation of all dependencies
+- Run `npm run dev` to start the dev server
+- Open `http://localhost:5000` in your Postman to try it out
+
 ## Endpoints
 
 ### Get All Contacts
@@ -36,6 +43,7 @@ POST /contact/
 # Request sample
 # {
 #   "name": "Iliya",
+#   "fullname": "Iliya Mohamad Lokman"
 #   "email": "iliya@gmail.com",
 #   "phone": 999
 #   "address": "Nashville, TN" 
@@ -54,3 +62,5 @@ PUT /contact/{name}
 # }
 
 ```
+
+[nodejs]: https://nodejs.org/en/
