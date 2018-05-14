@@ -19,6 +19,7 @@ Address Book
 - Run `npm install` to do first time installation of all dependencies
 - Run `npm run dev` to start the dev server
 - Open `http://localhost:5000` in [Postman] to try it out
+- Edit .env file to configure HTTP_PORT or ES_HOST
 
 ## Endpoints
 
